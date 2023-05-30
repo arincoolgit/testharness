@@ -24,6 +24,25 @@ pipeline:
                     command: echo hello world
                   timeout: ""
                   type: Run
+              - step:
+                  type: Run
+                  name: Run_codecov
+                  identifier: Run_codecov
+                  spec:
+                    shell: Sh
+                    command: |-
+                      echo "Welcome to Harness CI"
+                      uname -a
+                      pip install pytest
+                      pip install pytest-cov
+                      pip install -r requirements.txt
+
+                      pytest -v --cov --junitxml="result.xml" test.py
+
+                      # Download Codecov uploader and run it.
+                      curl -Os https://uploader.codecov.io/latest/linux/codecov
+                      chmod +x codecov
+                      ./codecov -t ${CODECOV_TOKEN}
           platform:
             arch: Amd64
             os: Linux
